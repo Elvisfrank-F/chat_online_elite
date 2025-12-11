@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
         
              Expanded(child: StreamBuilder<QuerySnapshot>(
         
-                 stream: FirebaseFirestore.instance.collection('mensagens').snapshots() ,
+                 stream: FirebaseFirestore.instance.collection('mensagens').orderBy('timestamp').snapshots() ,
         
                  builder: (context, snapshot){
         
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                        List<DocumentSnapshot> documents = snapshot.data!.docs;
         
                        return ListView.builder(
-                         reverse: true,
+                        // reverse: true,
         
                          itemCount: documents.length,
         
@@ -150,8 +150,8 @@ class _HomePageState extends State<HomePage> {
         
         
                            return Align(
-                               alignment: Alignment.centerLeft,
-                               child: CardMessenger(imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text']));
+                               alignment: true? Alignment.centerRight:Alignment.centerLeft,
+                               child: CardMessenger(isMy: true,imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text']));
                          },
         
                        );
