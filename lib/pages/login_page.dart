@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 
@@ -17,8 +18,38 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   Future<UserCredential> signInWithGoogle() async {
+
+
+    //======================WEB================
+
+
+    if(kIsWeb){
+
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+      googleProvider.setCustomParameters({
+        'prompt': 'select_account'
+      }
+      );
+
+      return await FirebaseAuth.instance.signInWithPopup(googleProvider);
+
+
+
+    }
+
+
+
+
+
+    // ========android===========
     //inicia o login no google
-    final googleUser = await GoogleSignIn().signIn();
+    final googleUser = await GoogleSignIn(
+      scopes: [
+        'email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+      ]
+    ).signIn();
 
     //se o usuario fechou retorna null
 
