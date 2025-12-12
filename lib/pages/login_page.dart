@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
         body: Center(
             child: Card(
               elevation: 10,
-              color: Colors.grey,
+              color: Color.fromRGBO(120, 120, 120, 1.0),
               child: Container(
                 
                 padding: EdgeInsets.all(10),
