@@ -80,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: Center(
             child: Card(
+              elevation: 10,
+              color: Colors.grey,
               child: Container(
                 
                 padding: EdgeInsets.all(10),
