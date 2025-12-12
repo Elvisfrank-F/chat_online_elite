@@ -94,7 +94,9 @@ class CardMessenger extends StatelessWidget {
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder:(context) => MostrePage(url:imgURL!)));
                 }
-              )
+              ),
+
+              Text("${CardFunc.tempo(data!, "data")} - ${CardFunc.tempo(data!, "hora")}")
             ],
           ),
         ),
