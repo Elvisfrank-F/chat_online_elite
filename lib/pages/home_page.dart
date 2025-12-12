@@ -158,6 +158,7 @@ class _HomePageState extends State<HomePage> {
 
                     isDark = valor;
 
+
                     setState(() {
                       if(isDark) {
                         themeNotifier.value = ThemeMode.dark;
