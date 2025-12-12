@@ -114,12 +114,16 @@ class _HomePageState extends State<HomePage> {
 
     });
 
-    if(themeNotifier.value == ThemeMode.dark){
-      isDark = true;
-    }
-    else {
-     isDark = false;
-    }
+    setState(() {
+      if(themeNotifier.value == ThemeMode.dark){
+        isDark = true;
+      }
+      else {
+        isDark = false;
+      }
+
+    });
+
 
   }
 
