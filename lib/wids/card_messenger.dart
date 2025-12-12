@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../card_func.dart';
 import '../pages/mostre_page.dart';
 
 
@@ -11,10 +12,11 @@ class CardMessenger extends StatelessWidget {
   final String? text;
   final String? imgURL;
   final bool isMy;
+  final DateTime? data;
 
 
 
-  const CardMessenger({super.key, required this.photoURL, required this.name, required this.text, this.imgURL, required this.isMy});
+  const CardMessenger({super.key, required this.photoURL, required this.name, required this.text, this.imgURL, required this.isMy, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +163,13 @@ class CardMessenger extends StatelessWidget {
                      Navigator.push(context, MaterialPageRoute(builder:(context) => MostrePage(url:imgURL!)));
                   }
 
-                )
+                ),
+
+                SizedBox(height: 10,),
+
+
+                Text("${CardFunc.tempo(data!, "data")} - ${CardFunc.tempo(data!, "hora")}")
+
               ],
             ),
           ),

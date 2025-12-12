@@ -272,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                                      maxWidth: MediaQuery.of(context).size.width>500? MediaQuery.of(context).size.width * 0.5 : 500,
                                      minWidth: 60
                                    ),
-                                   child: CardMessenger(isMy: cond,imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text'])));
+                                   child: CardMessenger(data: (item['timestamp'] as Timestamp).toDate()  ,isMy: cond,imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text'])));
                          },
         
                        );
