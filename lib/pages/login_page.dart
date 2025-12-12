@@ -1,3 +1,4 @@
+import 'package:elite/pages/frescar_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -78,19 +79,95 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: ElevatedButton(onPressed: () async {
-              try {
-                await signInWithGoogle();
-              }
-              catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Erro ao fazer login $e"))
-                );
-              }
-            }, child: const Text("Entrar no google"),
+            child: Card(
+              child: Container(
+                
+                padding: EdgeInsets.all(10),
+
+                width: MediaQuery.of(context).size.width>400? 400: MediaQuery.of(context).size.width*0.75,
+
+
+
+              child : Column(
+
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  Text("ELITE", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
+
+                  SizedBox(height: 10,),
+
+                  Text("Faça login para prosseguir"),
+
+                  SizedBox(height: 40,),
+
+                  ElevatedButton(onPressed: () async {
+                    try {
+                      await signInWithGoogle();
+                    }
+                    catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Erro ao fazer login $e"))
+                      );
+                    }
+                  }, child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/google.png")
+                          )
+                        ),
+                      ),
+
+                      SizedBox(width: 10,),
+
+                      const Text("Entrar no google"),
+
+                    ],
+                  ),),
+
+                  SizedBox(height: 30,),
+
+                  Text.rich(
+                    TextSpan(
+                      text: "Ao logar você concorda com os nossos ",
+                      children: [
+                        WidgetSpan(
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => FrescarPage()));
+                            },
+                            child: Text("termos", style: TextStyle(color: Colors.blue,
+                            decoration: TextDecoration.underline
+                            )),
+                          )
+                        )
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+
+
+
+
+
+
+
+                ],
+              ),
+
+              )
             )
 
-        )
+
+            )
     );
   }
 }
