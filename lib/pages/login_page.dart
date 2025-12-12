@@ -80,8 +80,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: Center(
             child: Card(
-              elevation: 10,
-              color: Color.fromRGBO(255, 0, 0, 1.0),
+              elevation: 50,
+              color: Color.fromRGBO(255, 255, 255, 1.0),
               child: Container(
                 
                 padding: EdgeInsets.all(10),
@@ -112,7 +112,11 @@ class _LoginPageState extends State<LoginPage> {
                           SnackBar(content: Text("Erro ao fazer login $e"))
                       );
                     }
-                  }, child: Row(
+                  },
+
+                    style: ElevatedButton.styleFrom(),
+
+                    child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
 

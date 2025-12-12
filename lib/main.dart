@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'firebase_options.dart';
 
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -24,7 +26,12 @@ void main() async {
 
 
 
-  runApp(const MyApp());
+  runApp(ValueListenableBuilder<ThemeMode>(
+    valueListenable: themeNotifier,
+    builder:(context, mode, _){
+      return MyApp(context: context, mode: mode);
+    }
+  ));
 
 //   final documents = await FirebaseFirestore.instance.collection("mensagens").get();
 //
@@ -37,12 +44,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  final BuildContext context;
+  final ThemeMode mode;
+
+  const MyApp({super.key, required this.context, required this.mode});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: mode,
       home: AuthGate(),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elite/main.dart';
 import 'package:elite/wids/card_messenger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   final user = FirebaseAuth.instance.currentUser!;
+
+  bool isDark = false;
 
   bool _isLoading = false;
 
@@ -132,7 +135,56 @@ class _HomePageState extends State<HomePage> {
                   CachedNetworkImageProvider(user.photoURL!,
                 ) : const AssetImage("assets/person.jpeg")
               )
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("MODO DARK"),
+                  Switch(value: isDark, onChanged:(valor){
+
+                    isDark = valor;
+
+                    setState(() {
+                      if(isDark) {
+                        themeNotifier.value = ThemeMode.dark;
+                      }
+                      else {
+                        themeNotifier.value = ThemeMode.light;
+                      }
+                    });
+
+                  } ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                children: [
+
+                  Text("LOGOUT"),
+
+                  IconButton(
+                    icon: Icon(Icons.logout),
+
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut();
+                      if(!kIsWeb){
+                        await GoogleSignIn().signOut();
+                      }
+                    },
+                  )
+                ],
+              ),
             )
+
           ],
         )
 
