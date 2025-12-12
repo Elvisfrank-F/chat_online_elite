@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/mostre_page.dart';
 
 
 class CardMessenger extends StatelessWidget {
@@ -9,6 +12,8 @@ class CardMessenger extends StatelessWidget {
   final String? imgURL;
   final bool isMy;
 
+
+
   const CardMessenger({super.key, required this.photoURL, required this.name, required this.text, this.imgURL, required this.isMy});
 
   @override
@@ -18,10 +23,7 @@ class CardMessenger extends StatelessWidget {
 
   Widget userMensenger(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width * 0.5,
+     // width: MediaQuery.of(context).size.width>300? MediaQuery.of(context).size.width * 0.5 : 300,
       // height: MediaQuery.of(context).size. * 0.5,
 
       child: Card(
@@ -48,7 +50,7 @@ class CardMessenger extends StatelessWidget {
                         image: DecorationImage(
                             fit: BoxFit.cover,
 
-                            image: photoURL != null ? NetworkImage(photoURL!)
+                            image: photoURL != null ? CachedNetworkImageProvider(photoURL!)
                                 :
                             AssetImage("assets/person.jpeg")
                         )
@@ -57,7 +59,9 @@ class CardMessenger extends StatelessWidget {
 
                   SizedBox(width: 10),
 
-                  Expanded(
+                  Flexible(
+
+                    fit: FlexFit.loose,
 
 
                       child: Text(
@@ -79,10 +83,16 @@ class CardMessenger extends StatelessWidget {
 
 
               imgURL == null ? Text(text ?? "") :
-              Image.network(
+              GestureDetector(
+                child: CachedNetworkImage(
 
 
-                  imgURL!)
+                   imageUrl: imgURL!),
+
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder:(context) => MostrePage(url:imgURL!)));
+                }
+              )
             ],
           ),
         ),
@@ -94,7 +104,7 @@ class CardMessenger extends StatelessWidget {
     Widget otherMensenger(BuildContext context){
 
       return Container(
-        width: MediaQuery.of(context).size.width * 0.5,
+      //  width: MediaQuery.of(context).size.width>500? MediaQuery.of(context).size.width * 0.5 : 500,
         // height: MediaQuery.of(context).size. * 0.5,
 
         child: Card(
@@ -117,14 +127,16 @@ class CardMessenger extends StatelessWidget {
                           image: DecorationImage(
                               fit: BoxFit.cover,
 
-                              image: photoURL != null? NetworkImage(photoURL!)
+                              image: photoURL != null? CachedNetworkImageProvider(photoURL!)
                                   :
                               AssetImage("assets/person.jpeg")
                           )
                       ),
                     ),
                     SizedBox(width: 10),
-                    Expanded(
+                    Flexible(
+
+                        fit: FlexFit.loose,
 
 
                         child: Text( name != null? name!.split(" ").first : "Invalid name",
@@ -137,10 +149,19 @@ class CardMessenger extends StatelessWidget {
                 SizedBox(height: 20,),
 
                 imgURL == null? Text(text ?? "") :
-                Image.network(
 
 
-                    imgURL!)
+                GestureDetector(
+                  child: CachedNetworkImage(
+
+
+                     imageUrl: imgURL!),
+
+                  onTap: (){
+                     Navigator.push(context, MaterialPageRoute(builder:(context) => MostrePage(url:imgURL!)));
+                  }
+
+                )
               ],
             ),
           ),

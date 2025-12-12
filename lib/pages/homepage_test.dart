@@ -24,6 +24,8 @@ class _HomeTestPageState extends State<HomeTestPage> {
   final user = FirebaseAuth.instance.currentUser!;
   Map<String, dynamic> data = {};
 
+  bool isLoading = false;
+
 
 
   void _sendMessage({String? text, XFile? img}) async {
@@ -38,9 +40,19 @@ class _HomeTestPageState extends State<HomeTestPage> {
           DateTime.now().millisecondsSinceEpoch.toString()
       );
 
+
+      setState(() {
+        isLoading = true;
+      });
+
       await storageRef.putFile(File(img.path));
 
       imgURL = await storageRef.getDownloadURL();
+
+      setState(() {
+        isLoading = false;
+      });
+
 
     }
 

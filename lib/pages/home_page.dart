@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elite/wids/card_messenger.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -23,6 +24,25 @@ class _HomePageState extends State<HomePage> {
 
   final user = FirebaseAuth.instance.currentUser!;
 
+  bool _isLoading = false;
+
+  final ScrollController _scrollController = new ScrollController();
+
+  void _scrollToBottom(){
+
+    Future.delayed(Duration(milliseconds: 100), (){
+
+      if(_scrollController.hasClients){
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+
+    });
+  }
+
 
   void _sendMessage({String? text, XFile? img}) async {
 
@@ -32,13 +52,35 @@ class _HomePageState extends State<HomePage> {
 
 
 
-      final storageRef = FirebaseStorage.instance.ref().child(
+      final storageRef = FirebaseStorage.instance.ref().child(user.uid).child(
         DateTime.now().millisecondsSinceEpoch.toString()
       );
 
-      await storageRef.putFile(File(img.path));
+      setState(() {
+        _isLoading = true;
+      });
+
+      //se for mobile
+
+      if(!kIsWeb){
+        await storageRef.putFile(File(img.path));
+      }
+      //se for web
+      else {
+        await storageRef.putData(await img.readAsBytes());
+      }
+
+
+
+
+
+
 
       imgURL = await storageRef.getDownloadURL();
+
+      setState(() {
+        _isLoading = false;
+      });
 
     }
 
@@ -87,9 +129,8 @@ class _HomePageState extends State<HomePage> {
               currentAccountPicture: CircleAvatar(
                 backgroundImage:
                 user.photoURL != null ?
-                  NetworkImage(
-                  user.photoURL!
-                ) as ImageProvider : const AssetImage("assets/person.jpeg")
+                  CachedNetworkImageProvider(user.photoURL!,
+                ) : const AssetImage("assets/person.jpeg")
               )
             )
           ],
@@ -136,9 +177,13 @@ class _HomePageState extends State<HomePage> {
         
                      default:
                        List<DocumentSnapshot> documents = snapshot.data!.docs;
+
+                       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
         
                        return ListView.builder(
                         // reverse: true,
+
+                         controller: _scrollController,
         
                          itemCount: documents.length,
         
@@ -147,11 +192,23 @@ class _HomePageState extends State<HomePage> {
                          itemBuilder: (context, index){
         
                            final Map<String, dynamic> item = documents[index].data() as Map<String, dynamic>;
+
+                           bool cond = false;
+
+                           if(user.uid == item['uid']){
+                             cond = true;
+                           }
         
         
-                           return Align(
-                               alignment: true? Alignment.centerRight:Alignment.centerLeft,
-                               child: CardMessenger(isMy: true,imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text']));
+                           return Container(
+                              // width: MediaQuery.of(context).size.width>200? MediaQuery.of(context).size.width * 0.5 : 200,
+                               alignment: cond? Alignment.centerRight:Alignment.centerLeft,
+                               child: ConstrainedBox(
+                                   constraints: BoxConstraints(
+                                     maxWidth: MediaQuery.of(context).size.width>500? MediaQuery.of(context).size.width * 0.5 : 500,
+                                     minWidth: 60
+                                   ),
+                                   child: CardMessenger(isMy: cond,imgURL: item['imgURL'],photoURL: item['photoURL'] , name: item['nome'], text: item['text'])));
                          },
         
                        );
@@ -160,6 +217,7 @@ class _HomePageState extends State<HomePage> {
                  }
         
              )),
+             _isLoading? LinearProgressIndicator(): Container(),
              TextCompose(sendMessage: _sendMessage)
            ],
           ),
