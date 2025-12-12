@@ -6,15 +6,27 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      # Instalar Flutter na versão do seu projeto
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.4"
+
+      # Rodar build web
       - run: flutter build web --release
+
+      # Fazer deploy no Firebase Hosting
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELITE_20496 }}
           channelId: live
           projectId: elite-20496
+
